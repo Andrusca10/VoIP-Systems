@@ -1,0 +1,95 @@
+[general]
+static=yes
+writeprotect=n
+
+[internal]
+
+exten => 1000,1,Dial(PJSIP/1000,20,tk) ; permite apelarea si transferarea abonatului 1000
+same => n,Answer() ; se raspunde la apel
+same => n,Hangup() ; se incheie apelul
+
+exten => 1001,1,Set(CHANNEL(callgroup)=1)       ;setarea canului de grup pentru pickup call
+exten => 1001,2,Dial(PJSIP/1001,30,tk)
+same => n,Answer()
+same => n,Hangup()
+
+;Voicemail pentru abonatul  1002
+exten => 1002,1,Set(CHANNEL(callgroup)=1)
+exten => 1002,2,Dial(PJSIP/1002,30,tk)
+same => n,VoiceMail(1002@VoiceMail)
+same =>n,Hangup()
+
+
+exten => 1020,1,Set(CHANNEL(callgroup)=2)
+exten => 1020,2,Dial(PJSIP/1020,30,tk)
+same => n,Answer()
+same => n,Hangup()
+
+exten => 2000,1,Dial(IAX2/2000,10)
+same => n,VoiceMail(2000@VoiceMail)
+same => n,Hangup()
+exten => 2001,1,Dial(IAX2/2001,10)
+same => n,VoiceMail(2001@VoiceMail)
+same => n,Hangup()
+
+include => parkedcalls
+
+;Functii Say
+
+exten =>111,1,Answer()
+same => n,Playback(welcome)
+same => n,SayAlpha(ABCD)
+same => n,SayNumber(24)
+same => n,SayDigits(123)
+same => n,SayPhonetic(poza)
+same => n,Hangup()
+
+;Conferinta
+; accesarea conferintei de catre un utilizator se face prin formarea extensiei 200
+exten => 200,1,Progress()
+same => n,Wait(1)
+same => n,ConfBridge(1,bridge,utilizator)
+
+;accesarea conferintei de catre administrator se face prin formarea extensiei 222
+exten => 222,1,Progress()
+same => n,Wait(1)
+same => n,ConfBridge(1,bridge,admin)
+
+;permiterea mesajelor instant
+
+[astsms]
+exten => _.,1,NoOp(SMS receiving dialplan invoked)
+exten => _.,n,NoOp(To ${MESSAGE(to)})
+exten => _.,n,NoOp(From ${MESSAGE(from)})
+exten => _.,n,NoOp(Body ${MESSAGE(body)})
+exten => _.,n,Set(ACTUALTO=${CUT(MESSAGE(to),@,1)})
+exten => _.,n,MessageSend(${ACTUALTO},${MESSAGE(from)})
+exten => _.,n,NoOp(Send status is ${MESSAGE_SEND_STATUS})
+exten => _.,n,GotoIf($["${MESSAGE_SEND_STATUS}" != "SUCCESS"]?sendfailedmsg)
+exten => _.,n,Hangup()
+; Handle failed messaging
+exten => _.,n(sendfailedmsg),Set(MESSAGE(body)="[${STRFTIME(${EPOCH},,%d%m%Y-%H:%M:%S)}] Your message to ${EXTEN} has failed. Retry later.")
+exten => _.,n,Set(ME_1=${CUT(MESSAGE(from),<,2)})
+exten => _.,n,Set(ACTUALFROM=${CUT(ME_1,@,1)})
+exten => _.,n,MessageSend(${ACTUALFROM},ServiceCenter)
+exten => _.,n,Hangup()
+exten => _.,n,Hangup()
+
+;Functii IAX
+[Iax]
+include => internal
+;Inregistrarea unui apel prin folosirea functiei MixMonitor
+
+exten => 100,1,Answer()
+same => n,MixMonitor(/var/spool/asterisk/monitor/test.wav)
+same => n,Dial(IAX2/2000)
+same => n,Hangup()
+;ascultarea apelului prin tastarea tastei 1
+exten => 333,1,playback(/var/spool/asterisk/monitor/test.wav)
+
+
+;400 -este extensia care o apelam pentru a asculta mesajele vocale
+exten => 400,1,answer()
+exten => 400,2,voicemailmain(@VoiceMail)
+
+exten => 500,1,Directory(VoiceMail,internal,ef)

@@ -1,0 +1,123 @@
+[transport-udp]
+type=transport
+protocol=udp
+bind=0.0.0.0
+
+;Endpoint 1000 
+
+[1000]
+type=endpoint
+context=internal ; contextul din planul de apelare unde se regasesc functile specifice utilizatorilor SIP
+message_context=astsms ; contextul de mesaje chat
+max_audio_streams=1
+max_video_streams=1
+disallow=all
+allow=ulaw
+allow=h263p  ; codecuri video
+allow=h264
+allow=vp8
+transport=transport-udp ; tipul de transport
+call_group=1   ; setarea grupului pentru pickup call
+pickup_group=1 ; 
+
+auth=1000 
+aors=1000
+
+[1000]
+type=auth ; autentificare user si parola 
+auth_type=userpass
+password=1000
+username=1000
+[1000]
+type=aor   ; setarea numarul maxim de logari simultate de pe mai multe telefoane
+max_contacts=1
+
+;Endpoint 1001
+
+[1001]
+type=endpoint
+context=internal
+message_context=astsms
+disallow=all
+allow=ulaw
+allow=h263p
+allow=h264
+allow=vp8
+transport=transport-udp
+;call_group=1
+;pickup_group=1
+auth=1001
+aors=1001
+
+[1001]
+type=auth
+auth_type=userpass
+password=1001
+username=1001
+
+[1001]
+[1001]
+type=auth
+auth_type=userpass
+password=1001
+username=1001
+
+[1001]
+type=aor
+max_contacts=1
+
+;Endpoint 1002
+
+[1002]
+type=endpoint
+context=internal
+message_context=astsms
+disallow=all
+allow=ulaw
+allow=h263p
+allow=h264
+allow=vp8
+transport=transport-udp
+call_group=1
+pickup_group=1
+auth=1002
+aors=1002
+
+[1002]
+[1002]
+type=auth
+auth_type=userpass
+password=1002
+username=1002
+
+[1002]
+type=aor
+max_contacts=1
+
+;Endpoint 1020
+
+[1020]
+type=endpoint
+context=internal
+message_context=astsms
+max_audio_streams=1
+max_video_streams=1
+disallow=all
+allow=ulaw
+allow=h263p
+allow=h264
+allow=vp8
+transport=transport-udp
+call_group=2
+pickup_group=2
+auth=1020
+aors=1020
+[1020]
+type=auth
+auth_type=userpass
+password=1020
+username=1020
+
+[1020]
+type=aor
+max_contacts=1

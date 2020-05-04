@@ -1,0 +1,14 @@
+[general]
+format = wav49|gsm|wav
+serveremail=asterisk
+attach=yes
+maxmsg=100
+maxsilence=10
+silencethreshold=128
+maxlogins=3
+sendvoicemail=yes
+
+[VoiceMail]
+2000 => 2000,Darius
+2001 => 2001,Raul
+1002 => 1002,David

@@ -1,0 +1,22 @@
+[general]
+[admin]
+type=user
+pin=1111
+marked=yes
+admin=yes
+music_on_hold_when_empty=yes    ;muzica pe fundal pana la logarea administratorului de conferinta
+announce_user_count=yes         ; anuntare prezenta abonat
+
+[utilizator]
+type=user
+pin=1234
+wait_marked=yes
+end_marked=yes
+music_on_hold_when_empty=yes
+announce_user_count=yes
+
+[bridge]
+type=bridge
+max_members=10                  ; numarul maxim de membrii
+video_mode=follow_talker
+video_update_discard=2000

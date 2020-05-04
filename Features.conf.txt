@@ -1,0 +1,7 @@
+[featuremap]
+blindxfer= #1 ;permite transferarea apelurilor fara asteptarea confirmarii celuilalt numar apelat
+atxfer= *2 ;permite informarea abonatului cu privire la transferarea unui apel
+pickupexten= *8               ; extensia de apelare pentru preluarea unui apel 
+pickupsound= beep             
+pickupfailsound= beeperr     
+
